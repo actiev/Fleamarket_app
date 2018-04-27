@@ -81,17 +81,6 @@ export default {
         ...mapState({
             item: 'addItem'
         })
-    },
-    // methods: {
-    //     add: function () {
-    //         this.$store.dispatch('save', {item: this.item})
-    //             .then(() => {
-    //                 this.$router.push({name: 'AddsList'})
-    //             })
-    //     }
-    // },
-    // created () {
-    //     this.$store.dispatch('loadById', {id: this.$route.params.id})
-    // }
+    }
 }
 </script>

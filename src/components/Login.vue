@@ -18,12 +18,6 @@
 <script>
 export default {
     name: 'Login',
-    data(){
-        return {
-            // login: 'test',
-            // pass: 'test'
-        }
-    },
     methods: {
         'loginAction': function () {
            console.log(this.email);
