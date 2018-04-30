@@ -13,6 +13,14 @@ body {
     margin: 0;
   }
 
+  ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
   a {
     text-decoration: none;
     color: $white;
@@ -163,14 +171,24 @@ body {
           justify-content: space-around;
           align-items: center;
 
-          .menu__items {
-            flex-direction: column;
-            display: none;
-            position: absolute;
-          }
+          .menu_box {
+            position: relative;
 
-          .display-block {
-            display: flex;
+            .menu {
+              border-radius: 4px;
+              border: 1px solid $red;
+              width: 416px;
+              height: 271px;
+              flex-direction: column;
+              position: absolute;
+              display: flex;
+              background: $white;
+              top: 0;
+
+              a {
+                color: $primary-color
+              }
+            }
           }
 
           .active_button {
@@ -246,6 +264,12 @@ body {
             width: 100px;
             max-height: 34px;
           }
+          .close_category {
+            cursor: pointer;
+            padding: 8px 12px;
+            width: 100px;
+            max-height: 34px;
+          }
         }
 
         .content_box_bottom {
@@ -291,11 +315,6 @@ body {
         margin: 30px 0 15px 0;
 
         ul {
-          list-style: none;
-          padding: 0;
-          display: flex;
-          align-items: center;
-
           li {
             cursor: pointer;
             margin-right: 5px;
@@ -625,6 +644,13 @@ body {
             .search_wrap {
               order: 0;
               width: 95%;
+            }
+
+            .menu_box {
+              .menu {
+                width: 100%;
+                position: relative;
+              }
             }
           }
         }

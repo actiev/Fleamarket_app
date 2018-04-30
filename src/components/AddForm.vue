@@ -76,11 +76,11 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-    name: 'AddForm',
-    computed: {
-        ...mapState({
-            item: 'addItem'
-        })
-    }
+  name: 'AddForm',
+  computed: {
+    ...mapState({
+      item: 'addItem'
+    })
+  }
 }
 </script>

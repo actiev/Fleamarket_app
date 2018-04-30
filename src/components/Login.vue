@@ -17,12 +17,12 @@
 
 <script>
 export default {
-    name: 'Login',
-    methods: {
-        'loginAction': function () {
-           console.log(this.email);
-           console.log(this.pass);
-        }
+  name: 'Login',
+  methods: {
+    'loginAction': function () {
+      console.log(this.email)
+      console.log(this.pass)
     }
+  }
 }
 </script>

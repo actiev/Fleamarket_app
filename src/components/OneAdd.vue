@@ -27,8 +27,8 @@
 </template>
 
 <script>
-    export default {
-        name: "OneAdd",
-        props: ['item']
-    }
+export default {
+  name: 'OneAdd',
+  props: ['item']
+}
 </script>

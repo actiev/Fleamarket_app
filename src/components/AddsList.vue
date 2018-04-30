@@ -1,20 +1,30 @@
 <template>
     <div class="container content_box">
         <div class="content_box_top">
-            <div>
-                <div class="select_category" @click="openMenu">
+            <div class="menu_box">
+                <div class="select_category" @click="show = !show">
                     <span>Catigories</span>
                     <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 256 256" style="opacity: 1; fill: rgb(117, 117, 117); width: 10px; height: 10px;">
                         <path fill="#343434" d="M239.999,56.243c6.916,0,11.753,3.267,14.553,9.8c2.758,6.534,1.57,12.346-3.521,17.48L139.555,195.168 c-3.732,3.182-7.637,4.709-11.624,4.582c-4.031,0-7.849-1.527-11.456-4.582L4.979,83.523c-5.134-5.134-6.279-10.946-3.521-17.48 s7.764-9.8,14.977-9.8H239.999L239.999,56.243z" style="fill: rgb(117, 117, 117);"></path>
                     </svg>
                 </div>
-                <nav class="menu" >
+                <nav class="menu" v-if="show">
+                    <div class="close_category" @click="show = !show">
+                        <span>Catigories</span>
+                        <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 256 256" style="opacity: 1; fill: rgb(111, 111, 111); width: 9px; height: 10px; transform: rotate(0deg) rotate(180deg);"><path fill="#343434" d="M239.999,56.243c6.916,0,11.753,3.267,14.553,9.8c2.758,6.534,1.57,12.346-3.521,17.48L139.555,195.168 c-3.732,3.182-7.637,4.709-11.624,4.582c-4.031,0-7.849-1.527-11.456-4.582L4.979,83.523c-5.134-5.134-6.279-10.946-3.521-17.48 s7.764-9.8,14.977-9.8H239.999L239.999,56.243z" style="fill: rgb(111, 111, 111);"></path>
+                        </svg>
+                    </div>
                     <div class="menu__items">
-                        <a href="#">Account</a>
-                        <a href="#">Preferences</a>
-                        <a href="#">Users</a>
-                        <a href="#">Payments</a>
-                        <a href="#">Logout</a>
+                        <div class="colum1">
+                            <span>title</span>
+                            <ul>
+                                <li><a href="#">Account</a></li>
+                                <li><a href="#">Preferences</a></li>
+                            </ul>
+                        </div>
+                        <div class="colum2">
+
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -60,28 +70,25 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
-    import OneAdd from '@/components/OneAdd'
-    import Pagination from '@/components/Pagination'
-    export default {
-      name: 'AddsList',
-      data () {
-        return {
-        }
-      },
-    computed: {
-        ...mapState({
-            list: 'addsList'
-        })
-    },
-    components: {
-        "one-add": OneAdd,
-        'pagination': Pagination
-    },
-    methods: {
-      openMenu () {
-          document.querySelector(".menu__items").classList.toggle('display-block');
-      }
+import { mapState } from 'vuex'
+import OneAdd from '@/components/OneAdd'
+import Pagination from '@/components/Pagination'
+export default {
+  name: 'AddsList',
+  data () {
+    return {
+      show: false,
+      active: false
     }
+  },
+  computed: {
+    ...mapState({
+      list: 'addsList'
+    })
+  },
+  components: {
+    'one-add': OneAdd,
+    'pagination': Pagination
+  }
 }
 </script>
