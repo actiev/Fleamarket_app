@@ -1,12 +1,12 @@
 <template>
     <div class="one_adds">
-        <img :src="item.img" />
+        <img :src="item.url" />
         <div class="description">
             <h2 class="title">
                 <router-link :to="{name:'EditForm', params:{id: item.id} }">{{ item.title }}</router-link>
             </h2>
-            <span class="price">Price: {{item.price}} $</span>
-            <p>{{item.desc}}</p>
+            <span class="price">Price: {{item.id}} $</span>
+            <p>{{item.body}}</p>
         </div>
         <router-link :to="{name:'SingleAdd', params:{id: item.id} }">
             <div class="contact_button">

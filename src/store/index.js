@@ -5,37 +5,9 @@ Vue.use(Vuex)
 
 const Store = new Vuex.Store({
   state: {
-    addsList: [
-      {
-        id: '1',
-        img: './static/img/img2.jpg',
-        title: 'Large Industrial Ultrasonic Cleaning Washing Machine for Engine Filter Carburetor',
-        price: '500',
-        desc: 'Horizontal Washing Machine (belly type) with CE Approved & SGS Audited GX series washing machine: GX-30-70KG sample washing machine: Ss washing machine...'
-      },
-      {
-        id: '2',
-        img: './static/img/img1.jpg',
-        title: 'Large Industrial Ultrasonic Cleaning Washing Machine for Engine Filter Carburetor',
-        price: '600',
-        desc: 'Horizontal Washing Machine (belly type) with CE Approved & SGS Audited GX series washing machine: GX-30-70KG sample washing machine: Ss washing machine...'
-      },
-      {
-        id: '3',
-        img: './static/img/img2.jpg',
-        title: 'Large Industrial Ultrasonic Cleaning Washing Machine for Engine Filter Carburetor',
-        price: '700',
-        desc: 'Horizontal Washing Machine (belly type) with CE Approved & SGS Audited GX series washing machine: GX-30-70KG sample washing machine: Ss washing machine...'
-      },
-      {
-        id: '4',
-        img: './static/img/img1.jpg',
-        title: 'Large Industrial Ultrasonic Cleaning Washing Machine for Engine Filter Carburetor',
-        price: '800',
-        desc: 'Horizontal Washing Machine (belly type) with CE Approved & SGS Audited GX series washing machine: GX-30-70KG sample washing machine: Ss washing machine...'
-      }
-    ],
-    addItem: {}
+    addsList: [],
+    addItem: {},
+    currentPage: 1
   },
   mutations: {
     updateAddsList (state, data) {
@@ -43,6 +15,9 @@ const Store = new Vuex.Store({
     },
     updateAddItem (state, data) {
       state.addItem = data
+    },
+    updateCurrentPage (state, data) {
+      state.currentPage = data
     }
   },
   actions: {
@@ -68,6 +43,9 @@ const Store = new Vuex.Store({
       })
 
       context.commit('updateAddsList', context.state.addsList)
+    },
+    setPage (context, params) {
+      context.commit('updateCurrentPage', params.data)
     }
   }
 })

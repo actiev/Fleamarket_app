@@ -8,7 +8,7 @@
                         <path fill="#343434" d="M239.999,56.243c6.916,0,11.753,3.267,14.553,9.8c2.758,6.534,1.57,12.346-3.521,17.48L139.555,195.168 c-3.732,3.182-7.637,4.709-11.624,4.582c-4.031,0-7.849-1.527-11.456-4.582L4.979,83.523c-5.134-5.134-6.279-10.946-3.521-17.48 s7.764-9.8,14.977-9.8H239.999L239.999,56.243z" style="fill: rgb(117, 117, 117);"></path>
                     </svg>
                 </div>
-                <nav class="menu" v-if="show">
+                <nav class="menu" v-show="show">
                     <div class="close_category" @click="show = !show">
                         <span>Catigories</span>
                         <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 256 256" style="opacity: 1; fill: rgb(111, 111, 111); width: 9px; height: 10px; transform: rotate(0deg) rotate(180deg);"><path fill="#343434" d="M239.999,56.243c6.916,0,11.753,3.267,14.553,9.8c2.758,6.534,1.57,12.346-3.521,17.48L139.555,195.168 c-3.732,3.182-7.637,4.709-11.624,4.582c-4.031,0-7.849-1.527-11.456-4.582L4.979,83.523c-5.134-5.134-6.279-10.946-3.521-17.48 s7.764-9.8,14.977-9.8H239.999L239.999,56.243z" style="fill: rgb(111, 111, 111);"></path>
@@ -39,8 +39,8 @@
                 </div>
             </div>
             <div class="content_top_triggers">
-                <span class="trigger active_button active">Active</span>
-                <span class="trigger inactive_button">Inactive</span>
+                <span class="active_button" :class="{ active: isActive }" @click="isActive = !isActive">Active</span>
+                <span class="inactive_button" :class="{ active: !isActive }" @click="isActive = false">Inactive</span>
             </div>
             <div class="check_box_container">
                 <label>
@@ -61,34 +61,54 @@
             </div>
         </div>
         <div class="content_box_center">
-            <one-add v-for="item in list" :item="item" :key="item.id"></one-add>
+            <one-add v-for="item in items" :item="item" :key="item.id"></one-add>
         </div>
         <div class="content_box_bottom">
-            <pagination></pagination>
+            <pagination :limit="this.addsLimit"></pagination>
         </div>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { HTTP } from '@/api/api'
 import OneAdd from '@/components/OneAdd'
 import Pagination from '@/components/Pagination'
 export default {
   name: 'AddsList',
   data () {
     return {
+      errors: [],
       show: false,
-      active: false
+      isActive: true,
+      addsLimit: 10
     }
   },
   computed: {
     ...mapState({
-      list: 'addsList'
-    })
+      list: 'addsList',
+      currentPage: 'currentPage'
+    }),
+    items () {
+      return this.list.filter((item, index) => {
+        return index >= ((this.addsLimit * this.currentPage) - this.addsLimit) &
+          index < this.addsLimit * this.currentPage
+      })
+    }
   },
   components: {
     'one-add': OneAdd,
     'pagination': Pagination
+  },
+  created () {
+    HTTP.get('posts')
+      .then(response => {
+        this.$store.dispatch('setList', {data: response.data})
+      })
+      .catch(e => {
+        this.errors.push(e)
+        console.log(this.errors)
+      })
   }
 }
 </script>
