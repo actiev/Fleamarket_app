@@ -37,8 +37,6 @@ const Store = new Vuex.Store({
       context.state.addsList.forEach(item => {
         if (item.id === params.item.id) {
           item.title = params.item.title
-          item.price = params.item.price
-          item.desc = params.item.desc
         }
       })
 

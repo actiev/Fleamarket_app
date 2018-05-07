@@ -6,7 +6,7 @@
                 <router-link :to="{name:'EditForm', params:{id: item.id} }">{{ item.title }}</router-link>
             </h2>
             <span class="price">Price: {{item.id}} $</span>
-            <p>{{item.body}}</p>
+            <p>{{item.completed}}</p>
         </div>
         <router-link :to="{name:'SingleAdd', params:{id: item.id} }">
             <div class="contact_button">
