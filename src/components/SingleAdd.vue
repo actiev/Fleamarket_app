@@ -55,16 +55,16 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
-    export default {
-        name: "SingleAdd",
-        computed: {
-            ...mapState({
-                item: 'addItem'
-            })
-        },
-        created () {
-            this.$store.dispatch('loadById', {id: this.$route.params.id})
-        }
-    }
+import { mapState } from 'vuex'
+export default {
+  name: 'SingleAdd',
+  computed: {
+    ...mapState({
+      item: 'addItem'
+    })
+  },
+  created () {
+    this.$store.dispatch('loadById', {id: this.$route.params.id})
+  }
+}
 </script>

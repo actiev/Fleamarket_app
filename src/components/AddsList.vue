@@ -1,20 +1,30 @@
 <template>
     <div class="container content_box">
         <div class="content_box_top">
-            <div>
-                <div class="select_category" @click="openMenu">
+            <div class="menu_box">
+                <div class="select_category" @click="showMenu = !showMenu">
                     <span>Catigories</span>
                     <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 256 256" style="opacity: 1; fill: rgb(117, 117, 117); width: 10px; height: 10px;">
                         <path fill="#343434" d="M239.999,56.243c6.916,0,11.753,3.267,14.553,9.8c2.758,6.534,1.57,12.346-3.521,17.48L139.555,195.168 c-3.732,3.182-7.637,4.709-11.624,4.582c-4.031,0-7.849-1.527-11.456-4.582L4.979,83.523c-5.134-5.134-6.279-10.946-3.521-17.48 s7.764-9.8,14.977-9.8H239.999L239.999,56.243z" style="fill: rgb(117, 117, 117);"></path>
                     </svg>
                 </div>
-                <nav class="menu" >
+                <nav class="menu" v-show="showMenu">
+                    <div class="close_category" @click="showMenu = !showMenu">
+                        <span>Catigories</span>
+                        <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 256 256" style="opacity: 1; fill: rgb(111, 111, 111); width: 9px; height: 10px; transform: rotate(0deg) rotate(180deg);"><path fill="#343434" d="M239.999,56.243c6.916,0,11.753,3.267,14.553,9.8c2.758,6.534,1.57,12.346-3.521,17.48L139.555,195.168 c-3.732,3.182-7.637,4.709-11.624,4.582c-4.031,0-7.849-1.527-11.456-4.582L4.979,83.523c-5.134-5.134-6.279-10.946-3.521-17.48 s7.764-9.8,14.977-9.8H239.999L239.999,56.243z" style="fill: rgb(111, 111, 111);"></path>
+                        </svg>
+                    </div>
                     <div class="menu__items">
-                        <a href="#">Account</a>
-                        <a href="#">Preferences</a>
-                        <a href="#">Users</a>
-                        <a href="#">Payments</a>
-                        <a href="#">Logout</a>
+                        <div class="colum1">
+                            <span>title</span>
+                            <ul>
+                                <li><a href="#">Account</a></li>
+                                <li><a href="#">Preferences</a></li>
+                            </ul>
+                        </div>
+                        <div class="colum2">
+
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -29,8 +39,8 @@
                 </div>
             </div>
             <div class="content_top_triggers">
-                <span class="trigger active_button active">Active</span>
-                <span class="trigger inactive_button">Inactive</span>
+                <span class="active_button" :class="{ active: isActive }" @click="isActive = true, resetPage()">Active</span>
+                <span class="inactive_button" :class="{ active: !isActive }" @click="isActive = false, resetPage()">Inactive</span>
             </div>
             <div class="check_box_container">
                 <label>
@@ -43,7 +53,7 @@
                 <router-link :to="{name: 'AddForm'}">
                     <button class="add_new_adds">
                         Add New
-                        <svg class="contact_button_svg" version="1.2" preserveAspectRatio="none" viewBox="0 0 800 800" data-id="5fc86a9c4523066c4675124fcc01e01f">
+                        <svg class="contact_button_svg" version="1.2" preserveAspectRatio="none" viewBox="0 0 800 800">
                             <g><polygon xmlns:default="http://www.w3.org/2000/svg" points="800,327.3 472.7,327.3 472.7,0 327.3,0 327.3,327.3 0,327.3 0,472.7 327.3,472.7 327.3,800 472.7,800 472.7,472.7   800,472.7 "></polygon></g>
                         </svg>
                     </button>
@@ -51,37 +61,71 @@
             </div>
         </div>
         <div class="content_box_center">
-            <one-add v-for="item in list" :item="item" :key="item.id"></one-add>
+            <one-add v-for="item in items" :item="item" :key="item.id"></one-add>
         </div>
         <div class="content_box_bottom">
-            <pagination></pagination>
+            <pagination :adds="this.getStatus" :limit="this.addsLimit" :default="this.defaultPage"></pagination>
         </div>
     </div>
 </template>
 
 <script>
-    import { mapState } from 'vuex'
-    import OneAdd from '@/components/OneAdd'
-    import Pagination from '@/components/Pagination'
-    export default {
-      name: 'AddsList',
-      data () {
-        return {
-        }
-      },
-    computed: {
-        ...mapState({
-            list: 'addsList'
-        })
-    },
-    components: {
-        "one-add": OneAdd,
-        'pagination': Pagination
-    },
-    methods: {
-      openMenu () {
-          document.querySelector(".menu__items").classList.toggle('display-block');
-      }
+import { mapState } from 'vuex'
+import { HTTP } from '@/api/api'
+import OneAdd from '@/components/OneAdd'
+import Pagination from '@/components/Pagination'
+export default {
+  name: 'AddsList',
+  data () {
+    return {
+      errors: [],
+      showMenu: false,
+      isActive: true,
+      addsLimit: 10,
+      defaultPage: 1
     }
+  },
+  computed: {
+    ...mapState({
+      list: 'addsList',
+      currentPage: 'currentPage'
+    }),
+    getStatus () {
+      if (this.isActive !== false) {
+        return this.list.filter((item) => {
+          return item.completed === true
+        })
+      } else {
+        return this.list.filter((item) => {
+          return item.completed === false
+        })
+      }
+    },
+    items () {
+      return this.getStatus.filter((item, index) => {
+        return index >= ((this.addsLimit * this.currentPage) - this.addsLimit) &
+          index < this.addsLimit * this.currentPage
+      })
+    }
+  },
+  methods: {
+    resetPage () {
+      this.$store.dispatch('setPage', {data: this.defaultPage})
+    }
+  },
+  components: {
+    'one-add': OneAdd,
+    'pagination': Pagination
+  },
+  created () {
+    HTTP.get('todos')
+      .then(response => {
+        this.$store.dispatch('setList', {data: response.data})
+      })
+      .catch(e => {
+        this.errors.push(e)
+        console.log(this.errors)
+      })
+  }
 }
 </script>

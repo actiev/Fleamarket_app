@@ -74,24 +74,24 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
-    export default {
-        name: 'EditForm',
-        computed: {
-            ...mapState({
-                item: 'addItem'
-            })
-        },
-        methods: {
-            save: function () {
-                this.$store.dispatch('save', {item: this.item})
-                    .then(() => {
-                        this.$router.push({name: 'AddsList'})
-                    })
-            }
-        },
-        created () {
-            this.$store.dispatch('loadById', {id: this.$route.params.id})
-        }
+import { mapState } from 'vuex'
+export default {
+  name: 'EditForm',
+  computed: {
+    ...mapState({
+      item: 'addItem'
+    })
+  },
+  methods: {
+    save: function () {
+      this.$store.dispatch('save', {item: this.item})
+        .then(() => {
+          this.$router.push({name: 'AddsList'})
+        })
     }
+  },
+  created () {
+    this.$store.dispatch('loadById', {id: this.$route.params.id})
+  }
+}
 </script>
