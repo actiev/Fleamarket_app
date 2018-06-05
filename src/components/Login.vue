@@ -19,7 +19,7 @@
 export default {
   name: 'Login',
   methods: {
-    'loginAction': function () {
+    loginAction: function () {
       console.log(this.email)
       console.log(this.pass)
     }

@@ -1,12 +1,12 @@
 <template>
     <div class="one_adds">
-        <img :src="item.url" />
+        <img :src="imgUrl + item.image" />
         <div class="description">
             <h2 class="title">
                 <router-link :to="{name:'EditForm', params:{id: item.id} }">{{ item.title }}</router-link>
             </h2>
-            <span class="price">Price: {{item.id}} $</span>
-            <p>{{item.completed}}</p>
+            <span class="price">Price: {{item.price}} $</span>
+            <p>{{item.description}}</p>
         </div>
         <router-link :to="{name:'SingleAdd', params:{id: item.id} }">
             <div class="contact_button">
@@ -27,8 +27,14 @@
 </template>
 
 <script>
+import { imageUploads } from '@/api/api'
 export default {
   name: 'OneAdd',
-  props: ['item']
+  props: ['item'],
+  data () {
+    return {
+      imgUrl: imageUploads
+    }
+  }
 }
 </script>

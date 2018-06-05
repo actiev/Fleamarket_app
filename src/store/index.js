@@ -6,12 +6,16 @@ Vue.use(Vuex)
 const Store = new Vuex.Store({
   state: {
     addsList: [],
+    categoryList: [],
     addItem: {},
     currentPage: 1
   },
   mutations: {
     updateAddsList (state, data) {
       state.addsList = data
+    },
+    updateCategoryList (state, data) {
+      state.categoryList = data
     },
     updateAddItem (state, data) {
       state.addItem = data
@@ -23,6 +27,9 @@ const Store = new Vuex.Store({
   actions: {
     setList (context, params) {
       context.commit('updateAddsList', params.data)
+    },
+    setCategories (context, params) {
+      context.commit('updateCategoryList', params.data)
     },
     loadById (context, params) {
       context.state.addsList.forEach(item => {
@@ -37,6 +44,10 @@ const Store = new Vuex.Store({
       context.state.addsList.forEach(item => {
         if (item.id === params.item.id) {
           item.title = params.item.title
+          item.price = params.item.price
+          item.description = params.item.description
+          item.category_id = params.item.category_id
+          item.user_id = params.item.user_id
         }
       })
 

@@ -6,7 +6,7 @@
             <span data-action="next">{{this.currentPage+this.default}}</span>
             <span>...</span>
         </div>
-        <span v-show="this.currentPage !== pageCount" data-action="last">{{pageCount}}</span>
+        <span v-show="this.currentPage !== pageCount & pageCount !== 0" data-action="last">{{pageCount}}</span>
         <span class="next" data-action="next">»</span>
     </div>
 </template>
@@ -25,7 +25,7 @@ export default {
       currentPage: 'currentPage'
     }),
     pageCount () {
-      return this.adds.length / this.limit
+      return Math.ceil(this.adds.length / this.limit)
     }
   },
   props: ['adds', 'limit', 'default'],

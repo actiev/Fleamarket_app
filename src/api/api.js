@@ -1,8 +1,10 @@
 import axios from 'axios'
 
 export const HTTP = axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com/',
+  baseURL: 'http://www.studapi.loc/',
   headers: {
-    Authorization: 'Bearer {token}'
+    'Content-Type': 'multipart/form-data'
   }
 })
+
+export const imageUploads = 'http://www.studapi.loc/uploads/'

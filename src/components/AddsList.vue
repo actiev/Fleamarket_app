@@ -16,7 +16,7 @@
                     </div>
                     <div class="menu__items">
                         <div class="colum1">
-                            <span>title</span>
+                            <span>Cars</span>
                             <ul>
                                 <li><a href="#">Account</a></li>
                                 <li><a href="#">Preferences</a></li>
@@ -29,7 +29,7 @@
                 </nav>
             </div>
             <div class="search_wrap">
-                <input type="search" id="Search" name="q" placeholder="Search">
+                <input type="search" id="Search" v-model="search" placeholder="Search">
                 <div class="search_ico">
                     <svg version="1.2" preserveAspectRatio="none" viewBox="-0.5100000000000016 0 51 51" style="opacity: 1; fill: rgb(255, 255, 255); width: 16px; height: 20px;"><g>
                         <g>
@@ -45,7 +45,7 @@
             <div class="check_box_container">
                 <label>
                     My ads
-                    <input type="checkbox">
+                    <input type="checkbox" @click="userAdds = !userAdds">
                     <span class="checkmark"></span>
                 </label>
             </div>
@@ -64,7 +64,7 @@
             <one-add v-for="item in items" :item="item" :key="item.id"></one-add>
         </div>
         <div class="content_box_bottom">
-            <pagination :adds="this.getStatus" :limit="this.addsLimit" :default="this.defaultPage"></pagination>
+            <pagination :adds="this.filterActiveList" :limit="this.addsLimit" :default="this.defaultPage"></pagination>
         </div>
     </div>
 </template>
@@ -79,10 +79,14 @@ export default {
   data () {
     return {
       errors: [],
+      sortedAdds: [],
       showMenu: false,
       isActive: true,
       addsLimit: 10,
-      defaultPage: 1
+      defaultPage: 1,
+      search: '',
+      category: '',
+      userAdds: false
     }
   },
   computed: {
@@ -90,21 +94,32 @@ export default {
       list: 'addsList',
       currentPage: 'currentPage'
     }),
-    getStatus () {
-      if (this.isActive !== false) {
-        return this.list.filter((item) => {
-          return item.completed === true
-        })
-      } else {
-        return this.list.filter((item) => {
-          return item.completed === false
-        })
-      }
+    minIndex () {
+      return this.addsLimit * this.currentPage - this.addsLimit
+    },
+    maxIndex () {
+      return this.addsLimit * this.currentPage
+    },
+    filterActiveList () {
+      return this.list.filter((item) => {
+        return item.active === '1'
+      })
+
+      // if (this.userAdds !== false) {
+      //   this.sortedAdds = this.sortedAdds.filter((item) => {
+      //     return item.userId === '6'
+      //   })
+      // }
+      //
+      // if (this.search !== '') {
+      //   this.sortedAdds = this.sortedAdds.filter((item) => {
+      //     return item.title.toLowerCase().includes(this.search.toLowerCase())
+      //   })
+      // }
     },
     items () {
-      return this.getStatus.filter((item, index) => {
-        return index >= ((this.addsLimit * this.currentPage) - this.addsLimit) &
-          index < this.addsLimit * this.currentPage
+      return this.filterActiveList.filter((item, index) => {
+        return index >= this.minIndex & index < this.maxIndex
       })
     }
   },
@@ -118,9 +133,18 @@ export default {
     'pagination': Pagination
   },
   created () {
-    HTTP.get('todos')
+    HTTP.get('products')
       .then(response => {
         this.$store.dispatch('setList', {data: response.data})
+      })
+      .catch(e => {
+        this.errors.push(e)
+        console.log(this.errors)
+      })
+    HTTP.get('categories')
+      .then(response => {
+        this.$store.dispatch('setCategories', {data: response.data})
+        console.log(response.data)
       })
       .catch(e => {
         this.errors.push(e)

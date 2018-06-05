@@ -22,7 +22,7 @@
                     <div class="description">
                         <h2 class="title">{{ item.title }}</h2>
                         <span class="price">Price: {{item.price}} $</span>
-                        <p>{{item.desc}}</p>
+                        <p>{{item.description}}</p>
                     </div>
                     <div class="form_box">
                         <div>
