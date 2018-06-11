@@ -3,33 +3,30 @@
         <div class="content_box_top">
             <div class="menu_box">
                 <div class="select_category" @click="showMenu = !showMenu">
-                    <span>Catigories</span>
+                    <span>Categories</span>
                     <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 256 256" style="opacity: 1; fill: rgb(117, 117, 117); width: 10px; height: 10px;">
                         <path fill="#343434" d="M239.999,56.243c6.916,0,11.753,3.267,14.553,9.8c2.758,6.534,1.57,12.346-3.521,17.48L139.555,195.168 c-3.732,3.182-7.637,4.709-11.624,4.582c-4.031,0-7.849-1.527-11.456-4.582L4.979,83.523c-5.134-5.134-6.279-10.946-3.521-17.48 s7.764-9.8,14.977-9.8H239.999L239.999,56.243z" style="fill: rgb(117, 117, 117);"></path>
                     </svg>
                 </div>
-                <nav class="menu" v-show="showMenu">
-                    <div class="close_category" @click="showMenu = !showMenu">
-                        <span>Catigories</span>
+                <nav class="menu" v-show="showMenu" @click="showMenu = !showMenu">
+                    <div class="close_category">
+                        <span>Categories</span>
                         <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 256 256" style="opacity: 1; fill: rgb(111, 111, 111); width: 9px; height: 10px; transform: rotate(0deg) rotate(180deg);"><path fill="#343434" d="M239.999,56.243c6.916,0,11.753,3.267,14.553,9.8c2.758,6.534,1.57,12.346-3.521,17.48L139.555,195.168 c-3.732,3.182-7.637,4.709-11.624,4.582c-4.031,0-7.849-1.527-11.456-4.582L4.979,83.523c-5.134-5.134-6.279-10.946-3.521-17.48 s7.764-9.8,14.977-9.8H239.999L239.999,56.243z" style="fill: rgb(111, 111, 111);"></path>
                         </svg>
                     </div>
+                    <span @click="selCategory = null, getList(1)">Get all</span>
                     <div class="menu__items">
-                        <div class="colum1">
-                            <span>Cars</span>
+                        <div v-for="cat in categories" :key="cat.category.id">
+                            <h3>{{cat.category.name}}</h3>
                             <ul>
-                                <li><a href="#">Account</a></li>
-                                <li><a href="#">Preferences</a></li>
+                                <li @click="selCategory = child.id, getList(1)" :key="child.id" v-for="child in cat.children">{{child.name}}</li>
                             </ul>
-                        </div>
-                        <div class="colum2">
-
                         </div>
                     </div>
                 </nav>
             </div>
             <div class="search_wrap">
-                <input type="search" id="Search" v-model="search" placeholder="Search">
+                <input type="search" id="Search" @change="getList" v-model="searchText" placeholder="Search">
                 <div class="search_ico">
                     <svg version="1.2" preserveAspectRatio="none" viewBox="-0.5100000000000016 0 51 51" style="opacity: 1; fill: rgb(255, 255, 255); width: 16px; height: 20px;"><g>
                         <g>
@@ -39,8 +36,8 @@
                 </div>
             </div>
             <div class="content_top_triggers">
-                <span class="active_button" :class="{ active: isActive }" @click="isActive = true, resetPage()">Active</span>
-                <span class="inactive_button" :class="{ active: !isActive }" @click="isActive = false, resetPage()">Inactive</span>
+                <span class="active_button" :class="{ active: isActive }" @click="isActive = true, getList(1)">Active</span>
+                <span class="inactive_button" :class="{ active: !isActive }" @click="isActive = false, getList(1)">Inactive</span>
             </div>
             <div class="check_box_container">
                 <label>
@@ -50,7 +47,7 @@
                 </label>
             </div>
             <div>
-                <router-link :to="{name: 'AddForm'}">
+                <router-link :to="{name:'AddForm'}">
                     <button class="add_new_adds">
                         Add New
                         <svg class="contact_button_svg" version="1.2" preserveAspectRatio="none" viewBox="0 0 800 800">
@@ -61,95 +58,64 @@
             </div>
         </div>
         <div class="content_box_center">
-            <one-add v-for="item in items" :item="item" :key="item.id"></one-add>
+            <item @updateList="getList" v-for="item in this.list" :item="item" :key="item.id"></item>
         </div>
         <div class="content_box_bottom">
-            <pagination :adds="this.filterActiveList" :limit="this.addsLimit" :default="this.defaultPage"></pagination>
+            <pagination @change="getPage" :limit="this.addsLimit" :total="parseInt(this.howPages)" :value="this.currentPage"></pagination>
         </div>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { HTTP } from '@/api/api'
-import OneAdd from '@/components/OneAdd'
 import Pagination from '@/components/Pagination'
+import Item from '@/components/Item'
 export default {
-  name: 'AddsList',
+  name: 'ItemsList',
   data () {
     return {
-      errors: [],
-      sortedAdds: [],
       showMenu: false,
       isActive: true,
       addsLimit: 10,
-      defaultPage: 1,
-      search: '',
-      category: '',
+      currentPage: 1,
+      searchText: '',
+      selCategory: null,
       userAdds: false
     }
   },
   computed: {
     ...mapState({
-      list: 'addsList',
-      currentPage: 'currentPage'
-    }),
-    minIndex () {
-      return this.addsLimit * this.currentPage - this.addsLimit
-    },
-    maxIndex () {
-      return this.addsLimit * this.currentPage
-    },
-    filterActiveList () {
-      return this.list.filter((item) => {
-        return item.active === '1'
-      })
-
-      // if (this.userAdds !== false) {
-      //   this.sortedAdds = this.sortedAdds.filter((item) => {
-      //     return item.userId === '6'
-      //   })
-      // }
-      //
-      // if (this.search !== '') {
-      //   this.sortedAdds = this.sortedAdds.filter((item) => {
-      //     return item.title.toLowerCase().includes(this.search.toLowerCase())
-      //   })
-      // }
-    },
-    items () {
-      return this.filterActiveList.filter((item, index) => {
-        return index >= this.minIndex & index < this.maxIndex
-      })
-    }
+      list: 'ItemsList',
+      categories: 'categoryList',
+      howPages: 'pages'
+    })
   },
   methods: {
-    resetPage () {
-      this.$store.dispatch('setPage', {data: this.defaultPage})
+    getPage (page) {
+      this.currentPage = page
+      this.getList()
+    },
+    getList (page, category, active, search) {
+      if (page) this.currentPage = page
+      this.$store.dispatch('setList', {
+        params: {
+          state: 1,
+          page: this.currentPage,
+          category: category || this.selCategory,
+          active: active || this.isActive,
+          search: search || this.search,
+          sorting: 'newest'
+        }
+      })
     }
   },
   components: {
-    'one-add': OneAdd,
+    Item,
     'pagination': Pagination
   },
-  created () {
-    HTTP.get('products')
-      .then(response => {
-        this.$store.dispatch('setList', {data: response.data})
-      })
-      .catch(e => {
-        this.errors.push(e)
-        console.log(this.errors)
-      })
-    HTTP.get('categories')
-      .then(response => {
-        this.$store.dispatch('setCategories', {data: response.data})
-        console.log(response.data)
-      })
-      .catch(e => {
-        this.errors.push(e)
-        console.log(this.errors)
-      })
+  mounted () {
+    this.getList()
+    this.$store.dispatch('setCategories')
   }
 }
 </script>

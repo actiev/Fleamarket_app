@@ -1,14 +1,15 @@
 <template>
     <div class="one_adds">
-        <img :src="imgUrl + item.image" />
+        <img :src="this.uploads + item.image" />
         <div class="description">
             <h2 class="title">
-                <router-link :to="{name:'EditForm', params:{id: item.id} }">{{ item.title }}</router-link>
+                <router-link v-if="isLoggedIn" :to="{name:'EditForm', params:{id: item.id} }">{{ item.title }}</router-link>
+                <router-link v-else :to="{name:'ContactForm', params:{id: item.id} }">{{ item.title }}</router-link>
             </h2>
             <span class="price">Price: {{item.price}} $</span>
             <p>{{item.description}}</p>
         </div>
-        <router-link :to="{name:'SingleAdd', params:{id: item.id} }">
+        <router-link :to="{name:'ContactForm', params:{id: item.id} }">
             <div class="contact_button">
                 <span>Contact Now</span>
                 <svg version="1.2" preserveAspectRatio="none" viewBox="0 -0.49606299212598515 63 63" class="contact_button_svg">
@@ -23,17 +24,47 @@
                 </svg>
             </div>
         </router-link>
+        <button class="cancel_button delete_button" v-if="isLoggedIn" @click="deleteItem">
+            Delete
+            <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 24 24" class="ng-element" style="opacity: 1; fill: rgb(255, 255, 255); width: 24px; height: 24px;">
+                <g>
+                    <path xmlns:default="http://www.w3.org/2000/svg" d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" style="fill: rgb(255, 255, 255);"></path>
+                </g>
+            </svg>
+        </button>
+        <div class="danger alert-danger" v-if="hasError.length > 1">{{hasError}}</div>
     </div>
 </template>
 
 <script>
-import { imageUploads } from '@/api/api'
+import { mapState } from 'vuex'
 export default {
-  name: 'OneAdd',
+  name: 'Item',
   props: ['item'],
   data () {
     return {
-      imgUrl: imageUploads
+      hasError: {}
+    }
+  },
+  computed: {
+    ...mapState({
+      uploads: 'uploads'
+    }),
+    isLoggedIn () {
+      return this.$store.state.isAuth
+    }
+  },
+  methods: {
+    deleteItem () {
+      this.$store.dispatch('delete', this.item.id)
+        .then(() => {
+          this.hasError = false
+          this.$emit('updateList', true)
+        }).catch(err => {
+          if (err.response.status !== 200) {
+            this.hasError = err.response.data
+          }
+        })
     }
   }
 }

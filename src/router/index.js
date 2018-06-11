@@ -1,22 +1,30 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import AddsList from '@/components/AddsList'
+import ItemsList from '@/components/ItemsList'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
-import SingleAdd from '@/components/SingleAdd'
-import AddForm from '@/components/AddForm'
-import EditForm from '@/components/EditForm'
+import ContactForm from '@/components/ContactForm'
+import ItemActions from '@/components/ItemActions'
 import Page404 from '@/components/Page404'
+import store from '../store'
 
 Vue.use(Router)
+
+const ifAuthenticated = (to, from, next) => {
+  if (store.state.isAuth) {
+    next()
+    return
+  }
+  next('/login')
+}
 
 export default new Router({
   mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'AddsList',
-      component: AddsList
+      name: 'ItemsList',
+      component: ItemsList
     },
     {
       path: '/login',
@@ -25,23 +33,25 @@ export default new Router({
     },
     {
       path: '/register',
-      name: 'Registration',
+      name: 'Register',
       component: Register
     },
     {
-      path: '/:id(\\d+)',
-      name: 'SingleAdd',
-      component: SingleAdd
+      path: '/item/:id(\\d+)',
+      name: 'ContactForm',
+      component: ContactForm
     },
     {
-      path: '/edit:id(\\d+)',
+      path: '/edit/:id(\\d+)',
       name: 'EditForm',
-      component: EditForm
+      component: ItemActions,
+      beforeEnter: ifAuthenticated
     },
     {
       path: '/add',
       name: 'AddForm',
-      component: AddForm
+      component: ItemActions,
+      beforeEnter: ifAuthenticated
     },
     {
       path: '*',
