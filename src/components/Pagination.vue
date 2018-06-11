@@ -1,47 +1,33 @@
 <template>
     <div class="pagination" @click="changePage">
-        <span class="prev" data-action="prev">«</span>
-        <span class="active">{{this.currentPage}}</span>
-        <div class="pages" v-show="(this.currentPage+this.default) < pageCount">
-            <span data-action="next">{{this.currentPage+this.default}}</span>
+        <span class="prev" :data-page="this.value-1">«</span>
+        <span class="active" v-show="this.value <= this.total" :data-page="this.value">{{this.value}}</span>
+        <div class="pages" v-show="this.value+1 < this.total">
+            <span :data-page="this.value+1" v-show="this.value+1 >= this.total">{{this.value+1}}</span>
             <span>...</span>
         </div>
-        <span v-show="this.currentPage !== pageCount" data-action="last">{{pageCount}}</span>
-        <span class="next" data-action="next">»</span>
+        <span v-show="this.value !== this.total && this.total !== 0" :data-page="this.total">{{this.total}}</span>
+        <span class="next" :data-page="this.value+1">»</span>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'Pagination',
-  data () {
-    return {
-      page: 1
+  props: {
+    limit: {
+      type: Number
+    },
+    total: {
+      type: Number
+    },
+    value: {
+      type: Number
     }
   },
-  computed: {
-    ...mapState({
-      currentPage: 'currentPage'
-    }),
-    pageCount () {
-      return this.adds.length / this.limit
-    }
-  },
-  props: ['adds', 'limit', 'default'],
   methods: {
     changePage (e) {
-      let action = e.target.dataset.action
-
-      if (this.currentPage < this.pageCount && action === 'next') {
-        this.page = this.currentPage + this.default
-      } else if (this.currentPage !== this.default && action === 'prev') {
-        this.page = this.currentPage - this.default
-      } else if (this.currentPage < this.pageCount && action === 'last') {
-        this.page = this.pageCount
-      }
-
-      this.$store.dispatch('setPage', {data: this.page})
+      if (e.target.dataset.page > 0 && e.target.dataset.page <= this.total) this.$emit('change', parseInt(e.target.dataset.page))
     }
   }
 }

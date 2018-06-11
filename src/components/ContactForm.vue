@@ -1,28 +1,16 @@
 <template>
     <div class="container">
-        <div class="path">
-            <ul>
-                <li>
-                    <router-link :to="{name: 'AddsList'}">Home</router-link>
-                    <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 256 256" style="opacity: 1; fill: rgb(199, 199, 199); width: 12px; height: 12px;">
-                        <path fill="#343434" d="M203.438,116.838c3.26,3.226,4.89,6.995,4.89,11.307c0,4.346-1.63,8.115-4.89,11.34L91.609,251.179 C88.384,254.37,84.649,256,80.371,256c-4.244,0-8.013-1.63-11.239-4.821l-16.638-16.638c-3.226-3.26-4.821-6.995-4.821-11.273 s1.596-8.013,4.821-11.204l84.58-84.564l-84.58-83.562c-3.226-3.226-4.821-6.927-4.821-11.069c0-4.142,1.596-7.843,4.821-11.069 L69.132,4.822C72.357,1.596,76.126,0,80.473,0c4.312,0,8.047,1.596,11.137,4.822L203.438,116.838L203.438,116.838z" style="fill: rgb(199, 199, 199);"></path>
-                    </svg>
-                </li>
-                <li class="current">
-                    <router-link :to="{name: 'AddsList'}">Kitchenware</router-link>
-                </li>
-            </ul>
-        </div>
+        <breadcrumbs :categories="getCategory"></breadcrumbs>
         <div class="contact_form_box">
             <div class="row">
                 <div class="col1">
-                    <img :src="item.img"/>
+                    <img v-if="item.image" :src="this.uploads+item.image"/>
                 </div>
                 <div class="col2">
                     <div class="description">
                         <h2 class="title">{{ item.title }}</h2>
                         <span class="price">Price: {{item.price}} $</span>
-                        <p>{{item.desc}}</p>
+                        <p>{{item.description}}</p>
                     </div>
                     <div class="form_box">
                         <div>
@@ -56,15 +44,31 @@
 
 <script>
 import { mapState } from 'vuex'
+import Breadcrumbs from './Breadcrumbs'
 export default {
-  name: 'SingleAdd',
+  name: 'ContactForm',
+  components: {Breadcrumbs},
   computed: {
     ...mapState({
-      item: 'addItem'
-    })
+      item: 'item',
+      categories: 'categoryList',
+      uploads: 'uploads'
+    }),
+    getCategory () {
+      for (let cat in this.categories) {
+        for (let subCat in this.categories[cat].children) {
+          if (this.categories[cat].children[subCat].id === this.item.category_id) {
+            return {
+              'category': this.categories[cat].category.name,
+              'subCategory': this.categories[cat].children[subCat].name
+            }
+          }
+        }
+      }
+    }
   },
   created () {
-    this.$store.dispatch('loadById', {id: this.$route.params.id})
+    this.$store.dispatch('loadById', this.$route.params.id)
   }
 }
 </script>
