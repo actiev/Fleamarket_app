@@ -15,41 +15,34 @@
         </div>
         <div class="edit_form_wrap">
             <div class="row">
-                <div class="col1">
-                    <!--<img :src="item.img"/>-->
-                    <div class="imageActions">
-                        <span>
-                            <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 24 24" style="opacity: 1; fill: rgb(0, 0, 0); width: 32px; height: 32px;">
-                                <g><path xmlns:default="http://www.w3.org/2000/svg" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z" style="fill: rgb(0, 0, 0);"></path></g>
-                            </svg>
-                        </span>
-                        <span>
-                            <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 20 20" style="opacity: 1; fill: rgb(0, 0, 0); width: 24px; height: 24px;">
-                                <g>
-                                    <rect display="none" fill="#FFA400" width="20" height="20" style="fill: rgb(0, 0, 0);"></rect>
-                                    <rect display="none" fill="none" width="20" height="20" style="fill: rgb(0, 0, 0);"></rect>
-                                    <polygon fill-rule="evenodd" clip-rule="evenodd" points="20,3 17,0 10,7 3,0 0,3 7,10 0,17 3,20 10,13 17,20 20,17 13,10 " style="fill: rgb(0, 0, 0);"></polygon>
-                                </g>
-                            </svg>
-                        </span>
-                    </div>
-                </div>
+                <uploadimage @add="getImage"></uploadimage>
                 <div class="col2">
                     <div class="form">
                         <div class="form_row">
                             <label for="title">Title</label>
-                            <input id="title" type="text"/>
+                            <input id="title" type="text" v-model="title" placeholder="Enter title">
+                            <p class="danger" v-if="!this.title">this field is required</p>
                         </div>
                         <div class="form_row">
                             <label for="price">Price</label>
-                            <input id="price" type="text"/>
+                            <input id="price" type="text" v-model="price" placeholder="Enter price">
+                            <p class="danger" v-if="!this.price">this field is required</p>
+                        </div>
+                        <div class="form_row" >
+                            <label for="price">Select category</label>
+                            <select v-model="selCategory">
+                                <optgroup v-for="cat in categories" :label="cat.category.name" :key="cat.category.id">
+                                    <option :key="child.id" v-for="child in cat.children" :value="child.id">{{child.name}}</option>
+                                </optgroup>
+                            </select>
                         </div>
                         <div class="form_row">
                             <label for="overview">Overview</label>
-                            <textarea id="overview"></textarea>
+                            <textarea id="overview" v-model="description" placeholder="Enter full description"></textarea>
+                            <p class="danger" v-if="!this.description">this field is required</p>
                         </div>
                         <div class="form_row_buttons">
-                            <button @click="add()" class="save_button">
+                            <button @click="checkForm" class="save_button">
                                 <span>Add</span>
                                 <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 24 24" style="opacity: 1; fill: rgb(255, 255, 255); width: 24px; height: 24px;">
                                     <g>
@@ -75,12 +68,55 @@
 
 <script>
 import { mapState } from 'vuex'
+import { HTTP } from '@/api/api'
+import UploadImage from '@/components/UploadImage'
 export default {
+  data () {
+    return {
+      title: null,
+      price: null,
+      description: null,
+      selCategory: null,
+      image: null
+    }
+  },
+  components: {
+    'uploadimage': UploadImage
+  },
   name: 'AddForm',
   computed: {
     ...mapState({
+      categories: 'categoryList',
       item: 'addItem'
     })
+  },
+  methods: {
+    getImage (image) {
+      this.image = image
+    },
+    checkForm () {
+      if (!this.title || !this.price || !this.description || !this.selCategory || !this.image) return
+      this.addNewAdds()
+    },
+    addNewAdds () {
+      let bodyFormData = new FormData()
+
+      bodyFormData.append('title', this.title)
+      bodyFormData.append('price', this.price)
+      bodyFormData.append('description', this.description)
+      bodyFormData.append('category_id', this.selCategory)
+      bodyFormData.append('image', this.image, this.image.name)
+      // bodyFormData.append('user_id', '')
+
+      HTTP.post('product', bodyFormData)
+        .then(response => {
+          if (response.status !== 400) {
+            this.$router.push('/')
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>

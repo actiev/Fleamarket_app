@@ -16,7 +16,7 @@
         <div class="edit_form_wrap">
             <div class="row">
                 <div class="col1">
-                    <img :src="item.img"/>
+                    <img :src="imgUrl + item.image" />
                     <div class="imageActions">
                         <span>
                             <svg version="1.2" preserveAspectRatio="none" viewBox="0 0 24 24" style="opacity: 1; fill: rgb(0, 0, 0); width: 32px; height: 32px;">
@@ -46,7 +46,7 @@
                         </div>
                         <div class="form_row">
                             <label for="overview">Overview</label>
-                            <textarea id="overview" v-model="item.desc"></textarea>
+                            <textarea id="overview" v-model="item.description"></textarea>
                         </div>
                         <div class="form_row_buttons">
                             <button @click="save()" class="save_button">
@@ -75,8 +75,14 @@
 
 <script>
 import { mapState } from 'vuex'
+import { imageUploads } from '@/api/api'
 export default {
   name: 'EditForm',
+  data () {
+    return {
+      imgUrl: imageUploads
+    }
+  },
   computed: {
     ...mapState({
       item: 'addItem'

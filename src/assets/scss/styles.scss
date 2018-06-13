@@ -184,6 +184,7 @@ body {
               display: flex;
               background: $white;
               top: 0;
+              z-index: 2;
 
               a {
                 color: $primary-color
@@ -218,33 +219,29 @@ body {
           }
 
           .search_wrap {
-            border: 1px solid $red;
-            color: $primary-color;
-            padding: 0 0 0 10px;
+            position: relative;
             text-align: left;
             font-size: 14px;
-            border-radius: 4px;
-            box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 1px inset;
             width: 295px;
-            height: 32px;
+            height: 34px;
             display: flex;
             justify-content: space-between;
           }
 
           #Search {
-            border:none;
+            border: 1px solid $red;
             width: 100%;
+            border-radius: 4px;
           }
 
           .search_ico {
-            border-width: 0px;
             border-radius: 4px;
-            border-color: rgb(200, 200, 200);
-            border-style: solid;
             background-color: $red;
-            width: 50px;
+            width: 45px;
             text-align: center;
-            height: 32px;
+            height: 34px;
+            position: absolute;
+            right: 0;
             line-height: 45px;
           }
 
@@ -525,6 +522,8 @@ body {
           padding: 20px 0 0 0;
           justify-content: space-evenly;
 
+          .danger {color: $red}
+
           .col1 {
             position: relative;
             width: 300px;
@@ -540,6 +539,8 @@ body {
               bottom:20px;
               align-items: center;
               justify-content: space-between;
+
+              #file {display: none}
 
               span {
                 cursor: pointer;
