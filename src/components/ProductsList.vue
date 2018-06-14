@@ -70,8 +70,10 @@
 import { mapState } from 'vuex'
 import Pagination from '@/components/Pagination'
 import Product from '@/components/Product'
+import getCategory from './mixins/getCategory'
 export default {
   name: 'ProductsList',
+  mixins: [getCategory],
   data () {
     return {
       showMenu: false,
@@ -85,7 +87,6 @@ export default {
   computed: {
     ...mapState({
       list: 'productsList',
-      categories: 'categoryList',
       howPages: 'pages'
     })
   },
@@ -111,7 +112,6 @@ export default {
   components: {Product, Pagination},
   created () {
     this.getList()
-    this.$store.dispatch('setCategories')
   }
 }
 </script>

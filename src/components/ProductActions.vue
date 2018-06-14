@@ -11,8 +11,10 @@ import { mapState } from 'vuex'
 import Breadcrumbs from './Breadcrumbs'
 import ProductPreview from './ProductPreview'
 import ProductForm from './ProductForm'
+import getCategory from './mixins/getCategory'
 export default {
   name: 'ProductActions',
+  mixins: [getCategory],
   data () {
     return {
       isCreate: false
@@ -21,23 +23,10 @@ export default {
   components: {ProductPreview, ProductForm, Breadcrumbs},
   computed: {
     ...mapState({
-      categories: 'categoryList',
       product: 'product',
       userAccess: 'access',
       isAuth: 'isAuth'
-    }),
-    getCategory () {
-      for (let cat in this.categories) {
-        for (let subCat in this.categories[cat].children) {
-          if (this.categories[cat].children[subCat].id === this.product.category_id) {
-            return {
-              'category': this.categories[cat].category.name,
-              'subCategory': this.categories[cat].children[subCat].name
-            }
-          }
-        }
-      }
-    }
+    })
   },
   created () {
     this.$route.params.id !== 'new' ? this.isCreate = false : this.isCreate = true
@@ -49,8 +38,6 @@ export default {
     } else if (this.isCreate && !this.isAuth) {
       this.$router.push({name: 'Login'})
     }
-
-    this.$store.dispatch('setCategories')
   }
 }
 </script>

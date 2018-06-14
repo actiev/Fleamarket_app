@@ -19,10 +19,17 @@ export default {
     logout (e) {
       e.preventDefault()
       this.$store.dispatch('logout')
-      this.$route.push({name: 'ProductsList'})
     },
     updateList () {
-      this.$emit('updateList', true)
+      this.$store.dispatch('setList',
+        {
+          params: {
+            state: 1,
+            sorting: 'newest',
+            page: 1,
+            active: true
+          }
+        })
     }
   },
   computed: {

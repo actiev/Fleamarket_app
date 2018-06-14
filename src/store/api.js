@@ -5,5 +5,6 @@ export default {
   products: 'http://www.studapi.loc/products/',
   product: 'http://www.studapi.loc/product/',
   images: 'http://www.studapi.loc/uploads/',
-  categories: 'http://www.studapi.loc/categories/'
+  categories: 'http://www.studapi.loc/categories/',
+  message: 'http://www.studapi.loc/'
 }

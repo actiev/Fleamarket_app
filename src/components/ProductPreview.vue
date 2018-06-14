@@ -16,17 +16,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import getProduct from './mixins/getProduct'
 export default {
-  name: 'ContactForm',
-  computed: {
-    ...mapState({
-      product: 'product',
-      uploads: 'uploads'
-    })
-  },
-  created () {
-    this.$store.dispatch('loadById', this.$route.params.id)
-  }
+  name: 'ProductPreview',
+  mixins: [getProduct]
 }
 </script>

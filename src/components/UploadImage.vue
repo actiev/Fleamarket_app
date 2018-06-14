@@ -26,19 +26,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import getProduct from './mixins/getProduct'
 export default {
   name: 'UploadImage',
+  mixins: [getProduct],
   data () {
     return {
       imageData: null
     }
-  },
-  computed: {
-    ...mapState({
-      product: 'product',
-      uploads: 'uploads'
-    })
   },
   methods: {
     onFileChange (e) {
@@ -60,9 +55,6 @@ export default {
       this.product.image = null
       this.imageData = null
     }
-  },
-  created () {
-    this.$store.dispatch('loadById', this.$route.params.id)
   }
 }
 </script>
