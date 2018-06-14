@@ -462,6 +462,7 @@ body {
         border-color: $red;
         border-style: solid;
         padding: 15px;
+        margin: 10px 0;
 
         .row {
           display: flex;
@@ -534,6 +535,7 @@ body {
 
         button {
           padding: 10px;
+          margin: 10px 0;
           border-width: 0px;
           border-radius: 4px;
           border-color: rgb(200, 200, 200);
@@ -554,8 +556,7 @@ body {
         border-radius: 4px;
         border: 1px solid $red;
         padding: 15px;
-        max-height: 622px;
-        margin-top: 10px;
+        margin: 10px 0;
 
         .row {
           display: flex;
@@ -648,17 +649,33 @@ body {
 
 @media screen and (max-width: 1024px) {
   body {
+    header {
+      height: 100px;
+    }
     header,footer {
       flex-direction: column;
+    }
+
+    header .login {
+      height: 30px;
     }
 
     #app {
       .main {
         .container {
           width: 90%;
+          margin: 0 auto;
           .row {
             flex-direction: column;
             align-items: center;
+
+            .col1 {
+              min-height: 100px;
+              width: 90%;
+              .imageActions {
+                justify-content: center;
+              }
+            }
 
             .col2 {
               width: 85%;
@@ -688,11 +705,17 @@ body {
               width: 95%;
             }
 
-            .menu_box {
+            .menu_box, .menu {
+              width: 100%;
+              position: relative;
+
               .menu {
-                width: 100%;
-                position: relative;
+                .menu__items {
+                  flex-direction: column;
+                  width: 100%;
+                }
               }
+
             }
           }
         }
@@ -703,6 +726,7 @@ body {
           .description {
             max-width: 100%;
             margin: 15px 0;
+            text-align: center;
           }
 
           img {
