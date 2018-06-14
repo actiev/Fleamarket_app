@@ -12,21 +12,26 @@
                         <span class="price">Price: {{product.price}} $</span>
                         <p>{{product.description}}</p>
                     </div>
+                    <div class="danger" v-if="hasError.length > 1">{{hasError}}</div>
                     <div class="form_box">
                         <div>
-                            <input type="text" name="name" placeholder="Your name">
+                            <input type="text" name="name" placeholder="Your name" v-model="data.name">
+                            <p class="danger" v-if="!data.name">field required</p>
                         </div>
                         <div>
-                            <input type="email" name="email" placeholder="Email">
+                            <input type="email" name="email" placeholder="Email" v-model="data.email">
+                            <p class="danger" v-if="!data.email">field required</p>
                         </div>
                         <div>
-                            <input type="phone" name="phone" placeholder="Tel.">
+                            <input type="tel" name="phone" placeholder="Tel." v-model="data.phone">
+                            <p class="danger" v-if="!data.phone">field required</p>
                         </div>
                         <div>
-                            <textarea name="message" placeholder="Message"></textarea>
+                            <textarea name="message" placeholder="Message" v-model="data.message"></textarea>
+                            <p class="danger" v-if="!data.message">field required</p>
                         </div>
                         <div>
-                            <button>
+                            <button @click="sendMessage">
                                 <span>Send Message</span>
                                 <svg version="1.2" preserveAspectRatio="none" viewBox="0 -8.5 67 67"  style="opacity: 1; fill: rgb(255, 255, 255); width: 32px; height: 32px;"><g><g xmlns:default="http://www.w3.org/2000/svg" id="Mail">
                                     <polygon fill-rule="evenodd" clip-rule="evenodd" points="0,14.5 0,49.1 66.2,49.1 66.2,14.5 33.1,30.9  " style="fill: rgb(255, 255, 255);"></polygon>
@@ -43,33 +48,41 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import Breadcrumbs from './Breadcrumbs'
+import getCategory from './mixins/getCategory'
+import getProduct from './mixins/getProduct'
 export default {
   name: 'ContactForm',
   components: {Breadcrumbs},
-  computed: {
-    ...mapState({
-      product: 'product',
-      categories: 'categoryList',
-      uploads: 'uploads'
-    }),
-    getCategory () {
-      for (let cat in this.categories) {
-        for (let subCat in this.categories[cat].children) {
-          if (this.categories[cat].children[subCat].id === this.product.category_id) {
-            return {
-              'category': this.categories[cat].category.name,
-              'subCategory': this.categories[cat].children[subCat].name
-            }
-          }
-        }
+  mixins: [getCategory, getProduct],
+  data () {
+    return {
+      hasError: {},
+      data: {
+        name: '',
+        email: '',
+        phone: '',
+        message: ''
       }
     }
   },
-  created () {
-    this.$store.dispatch('loadById', this.$route.params.id)
-    this.$store.dispatch('setCategories')
+  methods: {
+    sendMessage () {
+      for (let field in this.data) {
+        if (!this.data[field]) return
+      }
+
+      this.$store.dispatch('sendMessage', this.data)
+        .then(() => {
+          this.hasError = 'Thank you, your message send'
+          this.data = {}
+        })
+        .catch((err) => {
+          if (err.response.status !== 200) {
+            this.hasError = err.response.data
+          }
+        })
+    }
   }
 }
 </script>

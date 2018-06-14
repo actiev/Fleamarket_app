@@ -133,6 +133,12 @@ const Store = new Vuex.Store({
         .then(response => {
           return response.data
         })
+    },
+    sendMessage (context, params) {
+      return axios.post(API.message, params)
+        .then(response => {
+          return response.data
+        })
     }
   }
 

@@ -80,10 +80,9 @@ export default {
   components: {UploadImage},
   computed: {
     ...mapState({
-      product: 'product',
       userAccess: 'access',
-      categories: 'categoryList',
-      uploads: 'uploads'
+      product: 'product',
+      categories: 'categoryList'
     })
   },
   methods: {
@@ -108,7 +107,6 @@ export default {
       this.create ? this.save('create') : this.save('update')
     },
     save (action) {
-      console.log(action, this.product)
       if (!this.create && this.product.image instanceof Object) {
         this.$store.dispatch('updateImage', {id: this.$route.params.id, image: this.product.image})
       }
@@ -124,9 +122,6 @@ export default {
           }
         })
     }
-  },
-  created () {
-    this.$store.dispatch('setCategories')
   }
 }
 </script>
