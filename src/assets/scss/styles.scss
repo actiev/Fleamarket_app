@@ -71,7 +71,9 @@ body {
       font-weight: bold;
     }
     .login {
-      width: 10%;
+      width: 20%;
+      display: flex;
+      justify-content: space-evenly;
     }
   }
 
@@ -95,6 +97,9 @@ body {
       flex-flow: column;
       align-items: center;
       flex: 1 0 auto;
+
+      .danger {color: $red}
+      .alert-danger{position: absolute}
 
       .container {
         width: 940px;
@@ -177,13 +182,31 @@ body {
             .menu {
               border-radius: 4px;
               border: 1px solid $red;
-              width: 416px;
-              height: 271px;
+              height: auto;
               flex-direction: column;
               position: absolute;
               display: flex;
               background: $white;
               top: 0;
+              z-index: 2;
+
+              .menu__items {
+                justify-content: space-around;
+                display: flex;
+                width: 450px;
+              }
+
+              li, span {
+                cursor: pointer;
+              }
+
+              li {
+                &:hover {
+                  background: lightgray;
+                }
+              }
+
+              span {font-weight: bold}
 
               a {
                 color: $primary-color
@@ -218,33 +241,29 @@ body {
           }
 
           .search_wrap {
-            border: 1px solid $red;
-            color: $primary-color;
-            padding: 0 0 0 10px;
+            position: relative;
             text-align: left;
             font-size: 14px;
-            border-radius: 4px;
-            box-shadow: rgba(0, 0, 0, 0.1) 1px 1px 1px inset;
             width: 295px;
-            height: 32px;
+            height: 34px;
             display: flex;
             justify-content: space-between;
           }
 
           #Search {
-            border:none;
+            border: 1px solid $red;
             width: 100%;
+            border-radius: 4px;
           }
 
           .search_ico {
-            border-width: 0px;
             border-radius: 4px;
-            border-color: rgb(200, 200, 200);
-            border-style: solid;
             background-color: $red;
-            width: 50px;
+            width: 45px;
             text-align: center;
-            height: 32px;
+            height: 34px;
+            position: absolute;
+            right: 0;
             line-height: 45px;
           }
 
@@ -341,6 +360,8 @@ body {
           height: 50px;
         }
 
+        a {color: $red}
+
         input {
           border-width: 2px;
           width: 243px;
@@ -398,6 +419,7 @@ body {
         .description {
           width: 572px;
           max-width: 100%;
+          margin: 0 15px;
         }
 
         .contact_button {
@@ -417,6 +439,11 @@ body {
           flex-direction: row;
         }
 
+        .delete_button {
+          height: 34px;
+          margin-left: 20px;
+        }
+
       }
 
       .contact_form_box {
@@ -430,7 +457,7 @@ body {
         .row {
           display: flex;
           padding: 5px 0 0 0;
-          justify-content: space-evenly;
+          justify-content: start;
           width: 100%;
 
           .col1 {
@@ -519,6 +546,7 @@ body {
         border: 1px solid $red;
         padding: 15px;
         max-height: 622px;
+        margin-top: 10px;
 
         .row {
           display: flex;
@@ -530,6 +558,7 @@ body {
             width: 300px;
             img {
               width: 100%;
+              max-height: 290px;
             }
 
             .imageActions {
@@ -540,6 +569,8 @@ body {
               bottom:20px;
               align-items: center;
               justify-content: space-between;
+
+              #file {display: none}
 
               span {
                 cursor: pointer;

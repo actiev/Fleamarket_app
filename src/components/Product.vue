@@ -1,14 +1,14 @@
 <template>
     <div class="one_adds">
-        <img :src="item.url" />
+        <img :src="this.uploads + product.image" />
         <div class="description">
             <h2 class="title">
-                <router-link :to="{name:'EditForm', params:{id: item.id} }">{{ item.title }}</router-link>
+                <router-link :to="{ name: 'ProductActions', params:{id: product.id} }">{{ product.title }}</router-link>
             </h2>
-            <span class="price">Price: {{item.id}} $</span>
-            <p>{{item.completed}}</p>
+            <span class="price">Price: {{product.price}} $</span>
+            <p>{{product.description}}</p>
         </div>
-        <router-link :to="{name:'SingleAdd', params:{id: item.id} }">
+        <router-link :to="{name:'ContactForm', params:{id: product.id} }">
             <div class="contact_button">
                 <span>Contact Now</span>
                 <svg version="1.2" preserveAspectRatio="none" viewBox="0 -0.49606299212598515 63 63" class="contact_button_svg">
@@ -27,8 +27,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-  name: 'OneAdd',
-  props: ['item']
+  name: 'Product',
+  props: ['product'],
+  computed: {
+    ...mapState({
+      uploads: 'uploads'
+    })
+  }
 }
 </script>
